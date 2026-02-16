@@ -128,7 +128,7 @@ flowchart TB
    
 ```
 ---
-## IV. Justification behind Choosing Layered Monolithic Architecture
+## IV. Justification behind Choosing Layered Modular Architecture
 ---
 When designing a phishing detection platform, selecting the right software architecture is crucial. After evaluating multiple options, the layered architecture was chosen because it provides a strong balance between scalability, maintainability, performance, security, and development simplicity. This architecture organizes the system into clear functional layers, making the overall structure easier to understand, develop, and extend. Below is a detailed justification.
 
