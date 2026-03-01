@@ -183,3 +183,60 @@ flowchart TD
     end
     classDef dashed fill:transparent,stroke:#333,stroke-width:2.5px,stroke-dasharray:5 5,rx:10,ry:10
     class frontend,backend,postgres,worker,gmail,analysis dashed
+```
+---
+## 3. Interaction Between Components
+
+* The frontend sends authentication and dashboard requests to the backend.
+* The backend manages OAuth authentication with Google.
+* The backend retrieves emails using Gmail API.
+* Email data is inserted into the PostgreSQL queue.
+* The worker container retrieves queued jobs.
+* The worker launches isolated analysis containers.
+* Detection results are stored in the database.
+* The frontend retrieves analysis results from the backend.
+
+---
+## Interaction Between Components
+
+```mermaid
+flowchart TB
+
+    User[Frontend / User Interface]
+
+    subgraph BackendLayer["Backend Container (FastAPI)"]
+        Auth[OAuth Authentication]
+        Gmail[Gmail API Integration]
+        DB[(PostgreSQL Database)]
+    end
+
+    subgraph WorkerLayer["Worker Container"]
+        Queue[Job Queue]
+        Analyzer[Email Analyzer]
+        Risk[Risk Engine]
+        Mitigation[Mitigation Engine]
+    end
+
+    User -->|Login / Dashboard Request| Auth
+    Auth -->|Fetch Emails| Gmail
+    Gmail -->|Insert Email Data| DB
+    DB -->|Queue Job| Queue
+    Queue --> Analyzer
+    Analyzer --> Risk
+    Risk --> Mitigation
+    Mitigation -->|Store Results| DB
+    DB -->|Fetch Results| User
+```
+
+## Automated Email Processing Flow
+
+```mermaid
+flowchart LR
+
+    A[Email Retrieved] --> B[Create Analysis Job]
+    B --> C[Extract Indicators]
+    C --> D[Compute Risk Score]
+    D --> E[Classify Email]
+    E --> F[Apply Mitigation]
+    F --> G[Log Results]
+    G --> H[Update Dashboard]
