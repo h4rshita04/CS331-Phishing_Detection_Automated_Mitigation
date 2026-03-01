@@ -31,4 +31,74 @@ All application components are containerized using Docker and orchestrated with 
 All containers communicate through an isolated internal Docker network.
 
 ---
+## 2. Deployment Strategy
 
+### Step 1: Server Configuration
+
+- Provision an Ubuntu-based VPS.
+- Configure firewall (UFW):
+
+  - Allow SSH (Port 22, restricted access)
+  - Allow HTTP (Port 80)
+  - Allow HTTPS (Port 443)
+
+- Disable root login.
+- Enable SSH key-based authentication.
+- Install Docker and Docker Compose.
+
+---
+
+### Step 2: Container Deployment
+
+A `docker-compose.yml` configuration file will be used to define and deploy:
+
+- Nginx container (reverse proxy)
+- Frontend container
+- Backend container
+- Worker container
+- PostgreSQL container
+
+Environment variables will be configured for:
+
+- Google OAuth Client ID
+- Google OAuth Client Secret
+- JWT secret key
+- Database credentials
+
+All services will operate within an isolated Docker network.
+
+---
+
+### Step 3: API and OAuth Configuration
+
+- Register the domain in Google Cloud Console.
+- Enable Gmail API.
+- Configure OAuth 2.0 credentials.
+- Add the following redirect URI:
+(https://domain.com/auth/google/callback)
+- Ensure backend base URL matches the registered OAuth domain.
+
+---
+
+### Step 4: Reverse Proxy and HTTPS Configuration
+
+- Nginx will route:
+
+  - Root requests (`/`) to the frontend container.
+  - API requests (`/api/*`) to the backend container.
+
+- Let’s Encrypt SSL certificates will be installed.
+- HTTP traffic will be redirected to HTTPS.
+
+---
+
+### Step 5: Inter-Component Communication
+
+- Backend communicates with PostgreSQL using internal Docker networking.
+- Worker service polls PostgreSQL for queued analysis jobs.
+- Worker launches temporary analysis containers for phishing detection.
+- Results are written back to PostgreSQL.
+
+All sensitive services (database and worker) are not exposed publicly.
+
+---
