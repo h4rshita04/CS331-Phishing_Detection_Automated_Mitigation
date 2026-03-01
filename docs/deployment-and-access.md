@@ -132,3 +132,27 @@ All sensitive services (database and worker) are not exposed publicly.
 * Database accessible only within internal Docker network.
   
 ---
+# II. End User Access and System Interaction
+
+---
+
+## 1. User Access to Services
+
+End users access the system through a web browser using a secure HTTPS connection:
+(https://domainname.com).
+The browser communicates with the Nginx reverse proxy, which forwards requests to the appropriate internal services.
+
+---
+
+### User Interaction Flow
+
+1. User visits the website.
+2. User signs up or logs in.
+3. User selects “Connect Email.”
+4. System initiates OAuth 2.0 flow with Google.
+5. User grants permission.
+6. Backend receives and securely stores access tokens.
+7. System begins automatic email monitoring.
+8. Detected phishing incidents are displayed on the dashboard.
+
+---
