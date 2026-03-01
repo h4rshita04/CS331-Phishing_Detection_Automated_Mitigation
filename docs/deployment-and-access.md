@@ -156,3 +156,30 @@ The browser communicates with the Nginx reverse proxy, which forwards requests t
 8. Detected phishing incidents are displayed on the dashboard.
 
 ---
+
+### External Interaction
+```mermaid
+flowchart TD
+    subgraph frontend [" "]
+        FE["Frontend<br/>(React Container)"]
+    end
+    FE -->|"REST API Calls"| BE
+    subgraph backend [" "]
+        BE["Backend<br/>(FastAPI Container)"]
+    end
+    BE --> DB & WS & GM
+    subgraph postgres [" "]
+        DB["PostgreSQL DB<br/>(State/Queue)"]
+    end
+    subgraph worker [" "]
+        WS["Worker Service<br/>(Container)"]
+    end
+    subgraph gmail [" "]
+        GM["Google Gmail<br/>API + OAuth"]
+    end
+    DB & WS & GM --> AC
+    subgraph analysis [" "]
+        AC["Analysis Container<br/>(Isolated Docker)"]
+    end
+    classDef dashed fill:transparent,stroke:#333,stroke-width:2.5px,stroke-dasharray:5 5,rx:10,ry:10
+    class frontend,backend,postgres,worker,gmail,analysis dashed
