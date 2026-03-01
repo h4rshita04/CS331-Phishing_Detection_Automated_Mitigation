@@ -102,3 +102,33 @@ All services will operate within an isolated Docker network.
 All sensitive services (database and worker) are not exposed publicly.
 
 ---
+## 3. Security Measures
+
+### Infrastructure Security
+
+* Firewall enabled with restricted ports.
+* SSH key-based authentication.
+* HTTPS enforced using SSL certificates.
+
+### Application Security
+
+* Token-based authentication (JWT).
+* Role-based access control (User and Admin roles).
+* OAuth 2.0 integration (no password storage).
+
+### Container Security
+
+* Analysis containers configured with:
+
+  * No outbound network access (where applicable).
+  * CPU and memory limits.
+  * Read-only mounts for input data.
+* Secrets stored as environment variables, not hardcoded.
+
+### Data Security
+
+* OAuth tokens encrypted before storage.
+* No plaintext credentials stored in the database.
+* Database accessible only within internal Docker network.
+  
+---
