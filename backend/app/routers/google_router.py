@@ -1,7 +1,13 @@
 import os
+import secrets
+import hashlib
+import base64
+
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import RedirectResponse
 from google_auth_oauthlib.flow import Flow
+from googleapiclient.discovery import build
+from google.oauth2.credentials import Credentials
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -27,8 +33,17 @@ CLIENT_CONFIG = {
 }
 
 
+# =====================================================
+# LOGIN ROUTE
+# =====================================================
 @router.get("/google")
 async def login_google(request: Request):
+
+    code_verifier = secrets.token_urlsafe(64)
+
+    code_challenge = base64.urlsafe_b64encode(
+        hashlib.sha256(code_verifier.encode()).digest()
+    ).decode().rstrip("=")
 
     flow = Flow.from_client_config(
         CLIENT_CONFIG,
@@ -40,23 +55,28 @@ async def login_google(request: Request):
         access_type="offline",
         include_granted_scopes="true",
         prompt="consent",
+        code_challenge=code_challenge,
+        code_challenge_method="S256",
     )
 
-    # ONLY store serializable values
-    request.session["state"] = state
-    request.session["code_verifier"] = flow.code_verifier
+    request.session["oauth_state"] = state
+    request.session["code_verifier"] = code_verifier
 
     return RedirectResponse(authorization_url)
 
 
+# =====================================================
+# CALLBACK ROUTE (AUTH + FETCH EMAILS)
+# =====================================================
 @router.get("/google/callback")
 async def callback(request: Request):
 
-    state = request.session.get("state")
+    state = request.session.get("oauth_state")
     code_verifier = request.session.get("code_verifier")
+    code = request.query_params.get("code")
 
-    if not state or not code_verifier:
-        raise HTTPException(status_code=400, detail="Session expired. Try again.")
+    if not state or not code_verifier or not code:
+        raise HTTPException(status_code=400, detail="OAuth session invalid.")
 
     flow = Flow.from_client_config(
         CLIENT_CONFIG,
@@ -65,20 +85,56 @@ async def callback(request: Request):
         redirect_uri=GOOGLE_REDIRECT_URI,
     )
 
-    flow.code_verifier = code_verifier
-
     try:
-        flow.fetch_token(code=request.query_params.get("code"))
+        flow.fetch_token(
+            code=code,
+            code_verifier=code_verifier,
+        )
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"OAuth failed: {str(e)}")
 
     credentials = flow.credentials
 
-    # Clear session
-    request.session.pop("state", None)
-    request.session.pop("code_verifier", None)
+    # 🔥 Build Gmail service
+    service = build("gmail", "v1", credentials=credentials)
+
+    # Fetch latest 5 emails
+    results = service.users().messages().list(
+        userId="me",
+        maxResults=5
+    ).execute()
+
+    messages = results.get("messages", [])
+
+    email_list = []
+
+    for msg in messages:
+        msg_data = service.users().messages().get(
+            userId="me",
+            id=msg["id"]
+        ).execute()
+
+        headers = msg_data["payload"]["headers"]
+
+        subject = next(
+            (header["value"] for header in headers if header["name"] == "Subject"),
+            "No Subject"
+        )
+
+        sender = next(
+            (header["value"] for header in headers if header["name"] == "From"),
+            "Unknown Sender"
+        )
+
+        email_list.append({
+            "id": msg["id"],
+            "subject": subject,
+            "from": sender
+        })
+
+    request.session.clear()
 
     return {
         "message": "Google authentication successful",
-        "access_token": credentials.token,
+        "emails": email_list
     }
