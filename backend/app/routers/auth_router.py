@@ -10,7 +10,7 @@ from app.database.connection import get_db
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
-# ✅ SIGNUP (Still uses JSON — correct)
+# SIGNUP (Still uses JSON — correct)
 @router.post("/signup")
 def signup(user: UserCreate, db: Session = Depends(get_db)):
 
@@ -22,7 +22,7 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
     return {"message": "User created successfully"}
 
 
-# ✅ LOGIN (NOW OAuth Compatible)
+# LOGIN (NOW OAuth Compatible)
 @router.post("/login")
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
