@@ -69,3 +69,21 @@ button builds that trust immediately. A terminal menu or command prompt would un
 confidence in a security-sensitive application.
 
 ---
+## Why Not Other Interface Types
+
+| Interface Type | Reason for Rejection |
+|---|---|
+| **Command Language (CLI)** | Requires technical expertise, cannot handle OAuth redirects, displays raw text output only |
+| **Menu-Based Interface** | Incompatible with OAuth flow, forces linear navigation, cannot display visual risk results |
+| **Form-Based Interface** | Designed for data entry only, cannot display dynamic ML scan results visually |
+| **Voice Interface** | Privacy risk for security data, cannot display email content, incompatible with OAuth |
+
+---
+
+## Conclusion
+
+A **Direct Manipulation Interface** is the most appropriate UI for this system because :
+1. Accessibility for non-technical users
+2. Visual risk communication through color-coded results
+3. Gmail OAuth compatibility via browser-based redirects
+4. Flexible multi-step non-linear navigation
