@@ -1,27 +1,48 @@
-// src/context/AuthContext.jsx
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from "react";
+import { API_BASE_URL } from "../config";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+export const AuthProvider = ({ children }) => {
 
-  const login = (email) => {
-    setUser({ email });
-    setIsAuthenticated(true);
-  };
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const isAuthenticated = !!token;
+
+
+ const login = async (email,password)=>{
+
+  const response = await fetch("http://127.0.0.1:8000/auth/login",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/x-www-form-urlencoded"
+    },
+    body:new URLSearchParams({
+      username:email,
+      password:password
+    })
+  })
+
+  const data = await response.json()
+
+  localStorage.setItem("token",data.access_token)
+
+  setToken(data.access_token)
+  return true;  
+
+}
 
   const logout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
+    localStorage.removeItem("token");
+    setToken(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+    <AuthContext.Provider value={{ token, login, logout,isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  return useContext(AuthContext);
+};

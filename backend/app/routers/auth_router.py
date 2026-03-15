@@ -11,7 +11,7 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
 # ✅ SIGNUP (Still uses JSON — correct)
-@router.post("/signup")
+@router.post("/register")
 def signup(user: UserCreate, db: Session = Depends(get_db)):
 
     new_user = register_user(db, user.email, user.password)

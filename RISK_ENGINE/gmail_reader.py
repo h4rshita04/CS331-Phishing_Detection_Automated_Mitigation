@@ -110,10 +110,10 @@ def analyze_emails():
                 print("\n---------------------------")
                 print("Subject:", subject)
                 print("Prediction:", result["category"])
-                print("Risk Score:", result["risk_score"])
+                #print("Risk Score:", result["risk_score"])
 
             else:
-                print("API returned error:", response.text)
+                #print("API returned error:", response.text)
                 continue
 
         except Exception as e:

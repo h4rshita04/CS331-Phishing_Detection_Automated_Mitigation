@@ -9,3 +9,12 @@ class UserCreate(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+
+class UserResponse(BaseModel):
+    id: int
+    email: str
+    gmail_connected: bool = False
+
+    class Config:
+        from_attributes = True

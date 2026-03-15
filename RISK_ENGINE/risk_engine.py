@@ -4,8 +4,6 @@ from phishing_model import predict_email
 def calculate_risk(email_text):
 
     risk_score = 0
-
-    # ML prediction
     result = predict_email(email_text)
 
     if result["label"] == "PHISHING":
@@ -15,13 +13,11 @@ def calculate_risk(email_text):
 
     if any(word in email_text.lower() for word in scam_words):
         risk_score += 15
-    # urgent words detection
     urgent_words = ["verify","urgent","suspend","immediately","password","bank","login","update","confirm","security","alert","action required"]
 
     if any(word in email_text.lower() for word in urgent_words):
         risk_score += 10
 
-    # URL detection
     urls = re.findall(r'https?://\S+', email_text)
 
     if urls:
@@ -36,7 +32,6 @@ def calculate_risk(email_text):
     if any(word in email_text.lower() for word in suspicious_words):
         risk_score += 10
 
-    # classification
     if risk_score >= 30:
         category = "Phishing"
     elif risk_score >=20:
