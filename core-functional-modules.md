@@ -169,6 +169,61 @@ D --> D2[Gmail API]
 
 
 ```
+# A) Business Rules in Our Project
+
+Business rules are the set of conditions and guidelines that define how the system operates and makes decisions. They control how different functionalities such as user authentication, email scanning, threat detection, mitigation, and notification are performed in the system.
+
+## 1. Authentication Module
+
+- The system allows only registered users to access the platform.
+- User credentials (email and password) are verified during login.
+- After successful login, a secure authentication token is generated.
+- This token is required to access all protected functionalities of the system.
+
+## 2. Gmail Integration Module
+
+- The user must connect their Gmail account before performing email scanning.
+- Gmail access is granted through Google OAuth authorization.
+- The system can read emails only after successful authentication with Google.
+- If Gmail is not connected, the scanning feature is not allowed.
+
+## 3. Email Analysis Module
+
+- The system analyzes email content to identify potential threats.
+- It checks for suspicious keywords, URLs, and unusual patterns.
+- Based on these checks, a risk score is calculated for each email.
+- The email is then classified into one of the following categories:
+  - Safe
+  - Suspicious
+  - Phishing
+
+## 4. Mitigation Module
+
+- The system takes action only when an email is classified as phishing.
+- Phishing emails are automatically moved to the spam folder.
+- Emails classified as safe or suspicious are not modified.
+
+## 5. Notification Module
+
+- The system notifies the user after email analysis is completed.
+- If an email is detected as phishing, the user is informed that the email has been moved to spam.
+- For other emails, the system displays their classification status.
+
+## 6. Token and Access Control
+
+- Every request made to the system must include a valid authentication token.
+- Only authorized users are allowed to access system features.
+- Requests with invalid or expired tokens are rejected.
+
+## Overall Flow of the System
+
+- The user logs into the system.
+- The user connects their Gmail account.
+- The system scans the user's emails.
+- Each email is analyzed and assigned a risk score.
+- Emails are classified as safe, suspicious, or phishing.
+- Phishing emails are moved to the spam folder.
+- The user is notified about the result of the anal
 ## B) Validation Logic
 
 Validation logic ensures that only correct and properly formatted data enters the system.
@@ -225,3 +280,4 @@ The project effectively implements:
 - Data transformation to bridge backend processing and frontend presentation.
 
 This structured approach ensures the system is secure, reliable, and user-friendly.
+
