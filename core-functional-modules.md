@@ -166,3 +166,62 @@ C --> D[Data & External Services]
 
 D --> D1[PostgreSQL Database]
 D --> D2[Gmail API]
+
+
+```
+## B) Validation Logic
+
+Validation logic ensures that only correct and properly formatted data enters the system.
+
+### 1. User Input Validation
+
+- Email format is validated (must follow standard email pattern).
+- Password must meet minimum security requirements (length, characters).
+- Empty or null fields are not allowed.
+
+### 2. API Request Validation
+
+- Incoming requests must contain required fields (e.g., email content).
+- Invalid or missing JSON data is rejected.
+- Proper authentication tokens are required for API access.
+
+### 3. Email Data Validation
+
+- Email content (subject + body) must not be empty.
+- Only valid text data is processed for phishing analysis.
+- Malformed or corrupted email data is ignored.
+
+
+## C) Data Transformation
+
+Data transformation ensures that raw data is converted into a format suitable for the UI.
+
+### 1. Email Data Transformation
+
+- Raw email data from the API is converted into:
+  - Subject
+  - Body text
+  - Sender details
+- Combined into a single structured format for analysis.
+
+### 2. Risk Analysis Output Transformation
+
+- Internal outputs (scores, flags) are converted into user-friendly format:
+  - Numerical score → displayed as percentage
+  - Classification → “Safe”, “Suspicious”, or “Phishing”
+
+### 3. UI-Friendly Representation
+
+- Data is formatted for display:
+  - Risk scores shown as labels or color indicators
+  - Alerts displayed as messages or notifications
+
+## Conclusion
+
+The project effectively implements:
+
+- Business rules to control system behavior,
+- Validation logic to ensure data integrity and security,
+- Data transformation to bridge backend processing and frontend presentation.
+
+This structured approach ensures the system is secure, reliable, and user-friendly.
