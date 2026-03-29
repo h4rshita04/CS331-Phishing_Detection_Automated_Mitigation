@@ -85,9 +85,9 @@ Quantifies the level of threat.
 - Sender authenticity
 
 **Example:**
-- 0–30 → Safe
-- 31–70 → Suspicious
-- 71–100 → Phishing
+- 0–20 → Safe
+- 21–34 → Suspicious
+- 35–100 → Phishing
 
 **Why it exists:**
 Provides a **measurable and interpretable threat level** instead of a simple yes/no decision.
