@@ -1,12 +1,12 @@
 from app.models.email import Email
 
 
-# ✅ Check if email already exists (IMPORTANT: no re-scan)
+# Check if email already exists (IMPORTANT: no re-scan)
 def get_email_by_gmail_id(db, gmail_id):
     return db.query(Email).filter(Email.gmail_id == gmail_id).first()
 
 
-# ✅ Save email after processing
+# Save email after processing
 def save_email(db, email_data):
     email = Email(**email_data)
     db.add(email)
