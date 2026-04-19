@@ -155,3 +155,74 @@ Testing internal logic such as conditions and loops in the scanning function.
 - **Actual Output:** No action performed  
 - **Status:** Pass  
 
+---
+# Q2 (b): Defect Analysis
+
+---
+
+## Bug 1
+
+- **Bug ID:** BUG-01  
+- **Description:** Login page refreshes instead of showing error for invalid credentials  
+
+- **Steps to Reproduce:**
+  1. Enter incorrect login credentials  
+  2. Submit form  
+
+- **Expected Result:** Error message should be displayed  
+- **Actual Result:** Page refreshes without error  
+
+- **Severity:** High  
+
+- **Suggested Fix:**  
+  Handle login failure response properly and display error message in UI instead of refreshing page
+  <p>
+    <img width="1504" height="863" alt="Screenshot 2026-04-19 175433" src="https://github.com/user-attachments/assets/838dd4cb-7718-454b-8e17-ef151b10491a" />
+   <img width="1503" height="861" alt="Screenshot 2026-04-19 175444" src="https://github.com/user-attachments/assets/4d74a1cc-3d87-4260-85a7-1d5c7235194d" />
+</p>
+  
+---
+
+## Bug 2
+
+- **Bug ID:** BUG-02  
+- **Description:** Multiple API calls triggered when scan button is clicked rapidly  
+
+- **Steps to Reproduce:**
+  1. Click "Scan Email" multiple times quickly  
+  2. Observe API calls  
+
+- **Expected Result:** Only one request should be processed  
+- **Actual Result:** Multiple requests are sent  
+
+- **Severity:** Medium  
+
+- **Suggested Fix:**  
+  Disable button after first click or implement debouncing
+  
+ <img width="1920" height="1080" alt="Screenshot 2026-04-19 171500" src="https://github.com/user-attachments/assets/1f68ba7a-23c8-4ef8-95be-ec275142afc9" />
+
+---
+
+## Bug 3
+
+- **Bug ID:** BUG-03  
+- **Description:** Notifications not updated in real-time  
+
+- **Steps to Reproduce:**
+  1. Scan emails  
+  2. Generate phishing notification  
+  3. Open notification panel  
+
+- **Expected Result:** New notification should appear immediately  
+- **Actual Result:** Requires page refresh  
+
+- **Severity:** Medium  
+
+- **Suggested Fix:**  
+  Use polling (`setInterval`) or WebSocket-based updates to fetch notifications dynamically
+ <img width="1920" height="1080" alt="Screenshot 2026-04-19 180221" src="https://github.com/user-attachments/assets/3fe1d8ec-d409-4338-ba64-f767e9e7c2e5" />
+
+<img width="1920" height="1080" alt="Screenshot 2026-04-19 180234" src="https://github.com/user-attachments/assets/d7b68d88-3407-4879-972d-ddd2ae7b88f1" />
+
+
